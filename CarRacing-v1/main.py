@@ -3,11 +3,19 @@ import sys
 import numpy as np
 import gym
 import tensorflow as tf
+from PIL import ImageOps
+
+def rgb2gray(rgb):
+    gray = np.dot(rgb[..., :], [0.299, 0.587, 0.114])
+    gray = gray / 128. - 1.
+    return np.array(3 * [gray])
 
 if __name__ == '__main__':
-    if(sys.argv[1] == '-r'):
-        render = True
-        
+    render = False
+    if(len(sys.argv) > 1):
+        if(sys.argv[1] == '-r'):
+            render = True
+
     env = gym.make('CarRacing-v1', )
     agent = Agent()
     
@@ -19,8 +27,13 @@ if __name__ == '__main__':
         done = False
         score = 0
         obs = env.reset()
-
-        for _ in range(1000):
+        print(len(obs), len(obs[0]), len(obs[0][0]))
+        obs = rgb2gray(obs)
+        print(len(obs), len(obs[0]), len(obs[0][0]))
+        for j in range(1000):
+            if j % 50 == 0: # to show progress
+                print(j)
+            
             action = agent.select_action(obs)
             obs_, reward, done, info = env.step(action)
             agent.store(obs, action, reward, obs_, done)

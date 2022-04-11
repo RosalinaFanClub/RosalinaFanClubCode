@@ -54,7 +54,7 @@ def build_model(lr=.001, n_actions=12):
 
 
 class Agent:
-    def __init__(self, lr=.001, gamma=.99, n_actions=12, epsilon=1, input_shape=(96,96,3), batch_size=64):
+    def __init__(self, lr=.001, gamma=.99, n_actions=12, epsilon=1, input_shape=(3,96,96), batch_size=64):
         self.lr = lr
         self.gamma = gamma
         self.n_actions = n_actions
@@ -74,10 +74,9 @@ class Agent:
     
     def select_action(self, state):
         if random.random() > self.epsilon:
+            # state_tensor = tf.convert_to_tensor(np.array([state]), dtype='float32')
 
-            state_tensor = tf.convert_to_tensor(np.array([state]), dtype='float32')
-
-            act_values = self.model.predict(state_tensor)
+            act_values = self.model.predict(state)
             action = np.argmax(act_values[0])
             return self.action_space[action]
         else:
@@ -89,8 +88,7 @@ class Agent:
         states, actions, rewards, states_, dones = self.memory.sample_buffer()
         states_tensor = tf.convert_to_tensor(states, dtype='float32')
         states__tensor = tf.convert_to_tensor(states_, dtype='float32')
-        # print(states_tensor)
-        # print(states__tensor)
+        
         q_target_next = np.amax(self.t_model.predict(states__tensor), axis=1)
         q_target = rewards + self.gamma * q_target_next * (1 - dones)
         q_pred = self.model.predict(states_tensor)
