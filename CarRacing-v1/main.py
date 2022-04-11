@@ -1,9 +1,13 @@
 from dqn import Agent
+import sys
 import numpy as np
 import gym
 import tensorflow as tf
 
 if __name__ == '__main__':
+    if(sys.argv[1] == '-r'):
+        render = True
+        
     env = gym.make('CarRacing-v1', )
     agent = Agent()
     
@@ -22,7 +26,8 @@ if __name__ == '__main__':
             agent.store(obs, action, reward, obs_, done)
             agent.learn()
             
-            env.render()
+            if render:
+                env.render()
 
             score += reward
             obs = obs_
