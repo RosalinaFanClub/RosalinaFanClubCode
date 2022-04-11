@@ -3,7 +3,6 @@ import sys
 import numpy as np
 import gym
 import tensorflow as tf
-from PIL import ImageOps
 
 def rgb2gray(rgb):
     gray = np.dot(rgb[..., :], [0.299, 0.587, 0.114])
@@ -27,13 +26,8 @@ if __name__ == '__main__':
         done = False
         score = 0
         obs = env.reset()
-        print(len(obs), len(obs[0]), len(obs[0][0]))
-        obs = rgb2gray(obs)
-        print(len(obs), len(obs[0]), len(obs[0][0]))
-        for j in range(1000):
-            if j % 50 == 0: # to show progress
-                print(j)
-            
+
+        for j in range(1000):    
             action = agent.select_action(obs)
             obs_, reward, done, info = env.step(action)
             agent.store(obs, action, reward, obs_, done)

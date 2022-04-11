@@ -74,9 +74,9 @@ class Agent:
     
     def select_action(self, state):
         if random.random() > self.epsilon:
-            # state_tensor = tf.convert_to_tensor(np.array([state]), dtype='float32')
+            state_tensor = tf.convert_to_tensor(np.array([state]), dtype='float32')
 
-            act_values = self.model.predict(state)
+            act_values = self.model.predict(state_tensor)
             action = np.argmax(act_values[0])
             return self.action_space[action]
         else:
