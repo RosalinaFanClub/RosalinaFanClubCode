@@ -1,0 +1,7 @@
+pip3 install gym
+pip3 install pygame
+pip3 install box2d 
+pip3 install numpy
+pip3 install tensorflow
+pip3 install collections
+pip3 install random
