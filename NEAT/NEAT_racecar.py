@@ -16,7 +16,7 @@ def rgb2gray(rgb):
     '''
     gray = np.dot(rgb[..., :], [0.299, 0.587, 0.114])
     gray = gray / 255
-    return gray
+    return gray.round().astype(int)
 
 def collision(obs, frame):
     '''
