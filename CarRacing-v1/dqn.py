@@ -51,8 +51,8 @@ def build_model(n_actions, lr=.001):
         model.add(Flatten())
         # model.add(Dropout(0.2))
         model.add(Dense(256, activation='relu'))
-        model.add(Dense(n_actions))
-        model.compile(loss='mse', optimizer=Adam(learning_rate=lr, epsilon=1e-5))
+        model.add(Dense(n_actions, activation=None))
+        model.compile(loss='mean_squared_error', optimizer=Adam(learning_rate=lr, epsilon=1e-5))
         return model
 
 
@@ -66,13 +66,13 @@ class Agent:
         self.input_shape = input_shape
         self.batch_size = batch_size
         self.learn_counter = 0
-        self.update_rate = int(1e3)
+        self.update_rate = float(1e3)
         self.action_space = [(-1, 1, 0.2), (0, 1, 0.2), (1, 1, 0.2), # (Steer, Gas, Break)
                              (-1, 1,   0), (0, 1,   0), (1, 1,   0),         
                              (-1, 0, 0.2), (0, 0, 0.2), (1, 0, 0.2), 
                              (-1, 0,   0), (0, 0,   0), (1, 0,   0)]
         # self.action_space = [(-1, 0, 0), (0, 0, 0), (1, 0, 0), (0, 1, 0), (0, 0, 0.3)]
-        self.memory = ReplayBuffer(self.batch_size)
+        self.memory = ReplayBuffer(self.batch_size, 1000000)
         self.model = build_model(n_actions)
         self.t_model = build_model(n_actions)
 

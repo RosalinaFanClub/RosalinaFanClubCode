@@ -7,7 +7,7 @@ import sys
 import os
 
 CHECKPOINT = False
-RENDER = False
+RENDER = True
 TEST = False
 
 
@@ -137,9 +137,9 @@ def eval_genomes(genomes, config):
                 env.render()
                 # print(actions[action_idx])
             
-            g.fitness += sum(lidar(obs)) / 100
+            # g.fitness += sum(lidar(obs)) / 100
 
-            # g.fitness += (actions[action_idx][1] - actions[action_idx][2])
+            g.fitness += (actions[action_idx][1] - actions[action_idx][2]) * (score/900)
             if actions[action_idx][1] == 0:
                 g.fitness -= 20
             

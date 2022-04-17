@@ -38,6 +38,7 @@ if __name__ == '__main__':
 
             for j in range(1000):
                 action = agent.select_action(frames[-4:])
+                # print("Selected act :" , action)
                 obs_, reward, done, info = env.step(action)
                 obs_ = rgb2gray(obs_)
 
