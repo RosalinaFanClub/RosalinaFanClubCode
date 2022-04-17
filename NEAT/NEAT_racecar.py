@@ -20,7 +20,6 @@ def rgb2gray(rgb):
     gray = gray / 255
     return gray.round().astype(int)
 
-
 def collision(obs, frame):
     '''
     Check to see if car has gone off the track
