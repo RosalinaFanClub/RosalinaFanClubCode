@@ -105,7 +105,7 @@ def eval_genomes(genomes, config):
 
     print('Evaluating genomes...')
     env = gym.make('CarRacing-v1')
-    track = env.track
+
     # Defines an action space of more variety and variance, size=12
     # IMPORTANT need to update config file num_outputs if action space is changed
     # left_right = [-1, 0, 1]
@@ -124,7 +124,6 @@ def eval_genomes(genomes, config):
         net = neat.nn.FeedForwardNetwork.create(g, config)
         
         obs = env.reset()
-        env.track = track
         obs = rgb2gray(obs)
 
         for i in range(1000):
@@ -138,13 +137,12 @@ def eval_genomes(genomes, config):
                 env.render()
                 # print(actions[action_idx])
             
-
-            g.fitness += sum(lidar(obs))/2
+            g.fitness += sum(lidar(obs)) / 100
 
             # g.fitness += (actions[action_idx][1] - actions[action_idx][2])
             if actions[action_idx][1] == 0:
                 g.fitness -= 20
-            # g.fitness += reward
+            
             score += reward
 
             if collision(obs, i):
@@ -185,7 +183,7 @@ def test_agent(config, file='best.pickle'):
         winner = pickle.load(f)
 
     score = 0
-    env = gym.make('CarRacing-v1')
+    env = gym.make('CarRacing-v1') 
     actions = [[-1,.5, .1],[0,5, .1],[1,.5, .1],[0,0,.2]]
     net = neat.nn.FeedForwardNetwork.create(winner, config)
     obs = env.reset()
