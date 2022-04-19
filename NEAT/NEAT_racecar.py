@@ -221,7 +221,7 @@ def run(config):
     print('Generating genetic matter...')
     
     if CHECKPOINT:
-        p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-24')
+        p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-2')
     else:
         p = neat.Population(config)
 
