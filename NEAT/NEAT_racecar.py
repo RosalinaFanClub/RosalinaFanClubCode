@@ -198,6 +198,7 @@ def eval_genomes(genomes, config):
             # g.fitness += sum(lidar(obs, env)) / 200   # reward keeping distance from sides
             speed = lidar(obs, env)[0]
             g.fitness += speed / 100      # reward speed
+            # g.fitness += (actions[action_idx][1] - actions[action_idx][2]) * (score/900)
             
             score += reward
             
