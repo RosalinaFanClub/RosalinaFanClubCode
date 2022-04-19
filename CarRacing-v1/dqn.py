@@ -44,10 +44,8 @@ def build_model(n_actions, lr=.001):
         model.add(Conv2D(filters = 8, kernel_size = 7, activation='relu', 
         input_shape=(96,96,4), data_format='channels_last'))
         model.add(BatchNormalization())
-        model.add(MaxPooling2D(pool_size = (2, 2)))
         model.add(Conv2D(filters = 16, kernel_size = 3, activation='relu'))
         model.add(BatchNormalization())
-        model.add(MaxPooling2D(pool_size=(2, 2)))
         model.add(Flatten())
         # model.add(Dropout(0.2))
         model.add(Dense(256, activation='relu'))
@@ -57,24 +55,24 @@ def build_model(n_actions, lr=.001):
 
 
 class Agent:
-    def __init__(self, lr=.001, gamma=.99, tau=0, n_actions=12, epsilon=1, input_shape=(3,96,96), batch_size=64):
+    def __init__(self, lr=.001, gamma=.99, tau=0, epsilon=1, input_shape=(3,96,96), batch_size=64):
         self.lr = lr
         self.gamma = gamma
         self.tau = tau
-        self.n_actions = n_actions
         self.epsilon = epsilon
         self.input_shape = input_shape
         self.batch_size = batch_size
         self.learn_counter = 0
         self.update_rate = int(1e3)
         self.action_space = [(-1, 1, 0.2), (0, 1, 0.2), (1, 1, 0.2), # (Steer, Gas, Break)
-                             (-1, 1,   0), (0, 1,   0), (1, 1,   0),         
+                             (-1, 1,   0), (0, 1,   0), (1, 1,   0),      
                              (-1, 0, 0.2), (0, 0, 0.2), (1, 0, 0.2), 
                              (-1, 0,   0), (0, 0,   0), (1, 0,   0)]
+        self.n_actions = len(self.action_space)
         # self.action_space = [(-1, 0, 0), (0, 0, 0), (1, 0, 0), (0, 1, 0), (0, 0, 0.3)]
         self.memory = ReplayBuffer(self.batch_size)
-        self.model = build_model(n_actions)
-        self.t_model = build_model(n_actions)
+        self.model = build_model(self.n_actions)
+        self.t_model = build_model(self.n_actions)
 
     def store(self, state, action, reward, state_, done):
         self.memory.memorize(state, action, reward, state_, done)
@@ -106,7 +104,7 @@ class Agent:
             q_pred[i, idx] = q_target[i]
         self.model.fit(states_tensor, q_pred, epochs=1, verbose=0)
 
-        self.epsilon = self.epsilon - 1e-3 if self.epsilon > .01 else .01
+        self.epsilon = self.epsilon - 1e-5 if self.epsilon > .01 else .01
 
         if self.learn_counter % self.update_rate == 0:
             self.soft_update()
